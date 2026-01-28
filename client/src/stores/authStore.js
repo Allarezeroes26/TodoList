@@ -48,4 +48,15 @@ export const userAuth = create((set) => ({
             set({ isRegistering: false })
         }
     },
+
+    logout: async () => {
+        try {
+            const res = await api.post('/api/auth/logout');
+            set({ authUser: null })
+            toast.success('Logout Success!')
+        } catch (err) {
+            const message = err.response?.data?.message || err.message || "Something went wrong"
+            toast.error(message)
+        }
+    }
 }))

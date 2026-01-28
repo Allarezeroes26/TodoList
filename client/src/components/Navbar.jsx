@@ -1,32 +1,78 @@
-import React from 'react'
-import { PanelLeft } from 'lucide-react'
+import React, { useState } from "react";
+import { userAuth } from "../stores/authStore";
+import { Home, CheckSquare, Settings, LogOut, Menu } from "lucide-react";
+import avatar from '../assets/avatar.png'
+
 
 const Navbar = () => {
+  const { authUser } = userAuth();
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="navbar items-center justify-center flex flex-row bg-base-100 sm:px-10 md:px-5 lg:px-20 shadow-sm display-paragraph py-5">
-        <div className="flex-1">
-            <a className="btn btn-ghost font-display font-bold text-2xl tracking-wider">TODO</a>
-        </div>
+    <div
+      className={`flex flex-col bg-base-200 min-h-screen font-paragraph transition-all ${
+        collapsed ? "w-20" : "w-80"
+      }`}
+    >
+      <div className="flex items-center justify-between p-4 border-b border-base-300">
+        {!collapsed && <h1 className="font-bold font-display text-3xl">TODO APP</h1>}
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <Menu />
+        </button>
+      </div>
 
-        <div>
-            <div className="drawer">
-                <input id="my-drawer-1" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content">
-                    {/* Page content here */}
-                    <label htmlFor="my-drawer-1" className="btn drawer-button"><PanelLeft /></label>
-                </div>
-                <div className="drawer-side">
-                    <label htmlFor="my-drawer-1" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu bg-base-200 min-h-full w-80 p-4">
-                    {/* Sidebar content here */}
-                    <li><a>Sidebar Item 1</a></li>
-                    <li><a>Sidebar Item 2</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+      <div
+        className={`flex items-center gap-3 p-4 border-b border-base-300 ${
+          collapsed ? "justify-center" : ""
+        }`}
+      >
+        <img
+          src={authUser?.profilePic || avatar}
+          alt="User"
+          className="w-10 h-10 rounded-full"
+        />
+        {!collapsed && (
+          <div>
+            <p className="font-medium">{authUser?.name}</p>
+            <p className="text-sm opacity-70">{authUser?.email}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <ul className="flex-1 p-4 space-y-2">
+        <li>
+          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
+            <Home />
+            {!collapsed && "Home"}
+          </a>
+        </li>
+        <li>
+          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
+            <CheckSquare />
+            {!collapsed && "Tasks"}
+          </a>
+        </li>
+        <li>
+          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
+            <Settings />
+            {!collapsed && "Settings"}
+          </a>
+        </li>
+      </ul>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-base-300">
+        <button className="flex items-center gap-3 w-full hover:bg-base-300 rounded p-2">
+          <LogOut />
+          {!collapsed && "Logout"}
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
