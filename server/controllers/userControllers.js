@@ -24,8 +24,11 @@ const login = async (req, res) => {
         }
 
         generateToken(user._id, res)
-        res.status(200).json({ success: true, message: 'Login Success' })
-
+        res.status(200).json({ 
+            _id: user._id,
+            name: user.name,
+            email: user.email
+         })
 
     } catch (err) {
         console.log("Login failed", err)
@@ -61,9 +64,13 @@ const register = async (req, res) => {
         })
 
         if (newUser) {
-            generateToken(newUser._id, res)
             await newUser.save()
-            res.status(201).json({ success: true, message: "Register Success" })
+            generateToken(newUser._id, res)
+            res.status(200).json({ 
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email
+         })
         }
     } catch (err) {
         console.log('Internal Server Error (register)', err)
@@ -81,4 +88,14 @@ const logout = (req, res) => {
     }
 }
 
-module.exports = { login, register, logout }
+const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (err) {
+        console.log('Error checking auth', err)
+        res.status(500).json({ success: false, message: "Failed checking auth" })
+    }
+}
+
+
+module.exports = { login, register, logout, checkAuth }
