@@ -1,9 +1,48 @@
 const taskModel = require('../models/taskModel')
 
-const createTask = (req, res) => {
+const createTask = async (req, res) => {
+    try {
+        const { title, description, status, duedate  } = req.body;
+
+        if (!title) {
+            return res.status(400).json({ success: false, message: "Title is required" })
+        }
+
+        const newTask = await taskModel.create({
+            title,
+            description,
+            status,
+            duedate,
+            user: req.user._id
+        })
+
+        res.status(201).json({ success: true, task: newTask })
+    } catch (err) {
+        console.log("Error creating task", err)
+        res.status(500).json({ success: false, message: "Failed creating task" })
+    }
 }
 
-const updateTask = (req, res) => {
+const updateTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, status, duedate } = req.body;
+
+        const tasks = await taskModel.findOne({ id: _id, user: req.user._id })
+
+        if ( title !== undefined ) tasks.title = title;
+        if ( description !== undefined ) tasks.description = description; 
+        if ( status !== undefined ) tasks.status = status;
+        if ( duedate !== undefined ) tasks.duedate = duedate;
+
+        await tasks.save()
+
+        res.status(200).json({ success: true, tasks })
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: "Failed updating tasks" })
+    }
 }
 
 const getTask = async (req, res) => {

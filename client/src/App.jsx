@@ -6,6 +6,9 @@ import Register from './pages/Register'
 import { userAuth } from './stores/authStore'
 import { Loader } from 'lucide-react'
 import { useEffect } from 'react'
+import Tasks from './pages/Tasks'
+import Settings from './pages/Settings'
+import Timer from './pages/Timer'
 
 function App() {
   const { authUser, isCheckingAuth, checkAuth } = userAuth();
@@ -29,16 +32,28 @@ function App() {
       children: [
         {
           index: true,
-          element: authUser && authUser._id ? <HomePage /> : <Navigate to="/login" />
+          element: authUser ? <HomePage /> : <Navigate to="/login" />
         },
         {
           path: '/login',
-          element: !authUser || !authUser._id ? <Login /> : <Navigate to="/" />
+          element: !authUser  ? <Login /> : <Navigate to="/" />
         },
         {
           path: '/register',
-          element: !authUser || !authUser._id ? <Register /> : <Navigate to="/" />
+          element: !authUser  ? <Register /> : <Navigate to="/" />
         },
+        {
+          path: '/tasks',
+          element: authUser ? <Tasks /> : <Navigate to='/login'/>
+        },
+        {
+          path: '/settings',
+          element: authUser ? <Settings /> : <Navigate to='/login'/>
+        },
+        {
+          path: '/timer',
+          element: authUser ? <Timer /> : <Navigate to={'/login'} />
+        }
       ]
     }
   ]);

@@ -88,6 +88,10 @@ const logout = (req, res) => {
     }
 }
 
+const updateProfile = (req, res) => {
+    
+}
+
 const checkAuth = (req, res) => {
     try {
         res.status(200).json(req.user);

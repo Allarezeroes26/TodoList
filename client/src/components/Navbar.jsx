@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { userAuth } from "../stores/authStore";
-import { Home, CheckSquare, Settings, LogOut, Menu } from "lucide-react";
+import { Home, CheckSquare, Settings, Timer, LogOut, Menu } from "lucide-react";
 import avatar from '../assets/avatar.png'
+import { Link } from 'react-router-dom'
 
 
 const Navbar = () => {
-  const { authUser } = userAuth();
+  const { authUser, logout } = userAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  const handleLogout = async (e) => {
+    e.preventDefault()
+    await logout()
+  }
 
   return (
     <div
       className={`flex flex-col bg-base-200 min-h-screen font-paragraph transition-all ${
-        collapsed ? "w-20" : "w-80"
+        collapsed ? "w-18" : "w-80"
       }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-base-300">
-        {!collapsed && <h1 className="font-bold font-display text-3xl">TODO APP</h1>}
+        {!collapsed && <h1 className="font-bold font-display text-3xl">TD</h1>}
         <button
           className="btn btn-ghost btn-sm"
           onClick={() => setCollapsed(!collapsed)}
@@ -36,37 +42,40 @@ const Navbar = () => {
         />
         {!collapsed && (
           <div>
-            <p className="font-medium">{authUser?.name}</p>
+            <p className="font-medium font-display">{authUser?.name}</p>
             <p className="text-sm opacity-70">{authUser?.email}</p>
           </div>
         )}
       </div>
 
-      {/* Navigation */}
       <ul className="flex-1 p-4 space-y-2">
         <li>
-          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
-            <Home />
-            {!collapsed && "Home"}
-          </a>
+          <Link className="flex items-center gap-3 hover:bg-base-300 rounded p-2" to='/'>
+              <Home />
+              {!collapsed && "Home"}
+          </Link>
         </li>
         <li>
-          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
-            <CheckSquare />
-            {!collapsed && "Tasks"}
-          </a>
+          <Link className="flex items-center gap-3 hover:bg-base-300 rounded p-2" to='/tasks'>
+              <CheckSquare />
+              {!collapsed && "Tasks"}
+          </Link>
         </li>
         <li>
-          <a className="flex items-center gap-3 hover:bg-base-300 rounded p-2">
-            <Settings />
-            {!collapsed && "Settings"}
-          </a>
+            <Link className="flex items-center gap-3 hover:bg-base-300 rounded p-2" to='/settings'>
+              <Settings />
+              {!collapsed && "Settings"}
+            </Link>
+        </li>
+        <li>
+            <Link className="flex items-center gap-3 hover:bg-base-300 rounded p-2" to='/timer'>
+              <Timer />
+              {!collapsed && "Timer"}
+            </Link>
         </li>
       </ul>
-
-      {/* Logout */}
       <div className="p-4 border-t border-base-300">
-        <button className="flex items-center gap-3 w-full hover:bg-base-300 rounded p-2">
+        <button onClick={handleLogout} className="flex items-center gap-3 w-full hover:bg-base-300 rounded p-2">
           <LogOut />
           {!collapsed && "Logout"}
         </button>

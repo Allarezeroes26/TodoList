@@ -51,7 +51,7 @@ export const userAuth = create((set) => ({
 
     logout: async () => {
         try {
-            const res = await api.post('/api/auth/logout');
+            await api.post('/api/auth/logout');
             set({ authUser: null })
             toast.success('Logout Success!')
         } catch (err) {
