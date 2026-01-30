@@ -10,28 +10,26 @@ export const taskStore = create((set, get) => ({
   isTaskUpdating: false,
 
   createTask: async (taskData) => {
-    set({ isTaskCreating: true })
+    set({ isTaskCreating: true });
     try {
-      const res = await api.post('/api/tasks/create-task', taskData)
-
+      const res = await api.post('/api/tasks/create-task', taskData);
       set({
-        tasks: [...get().tasks, res.data],
-      })
-
-      toast.success('Task created')
+        tasks: [...get().tasks, res.data.task], 
+      });
+      toast.success('Task created');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Something went wrong')
+      toast.error(err.response?.data?.message || 'Something went wrong');
     } finally {
-      set({ isTaskCreating: false })
+      set({ isTaskCreating: false });
     }
   },
 
   getTasks: async () => {
     try {
-      const res = await api.get('/api/tasks/get-tasks')
-      set({ tasks: Array.isArray(res.data) ? res.data : [] })
+      const res = await api.get('/api/tasks/get-tasks');
+      set({ tasks: Array.isArray(res.data.tasks) ? res.data.tasks : [] });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to load tasks')
+      toast.error(err.response?.data?.message || 'Failed to load tasks');
     }
   },
 

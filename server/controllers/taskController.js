@@ -2,7 +2,7 @@ const taskModel = require('../models/taskModel')
 
 const createTask = async (req, res) => {
     try {
-        const { title, description, status, duedate  } = req.body;
+        const { title, description, status, dueDate, subTasks  } = req.body;
 
         if (!title) {
             return res.status(400).json({ success: false, message: "Title is required" })
@@ -12,7 +12,8 @@ const createTask = async (req, res) => {
             title,
             description,
             status,
-            duedate,
+            dueDate,
+            subTasks,
             user: req.user._id
         })
 
@@ -26,24 +27,35 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, status, duedate } = req.body;
+        const { title, description, status, dueDate, subTasks } = req.body;
 
-        const tasks = await taskModel.findOne({ id: _id, user: req.user._id })
+        const task = await taskModel.findOne({
+            _id: id,
+            user: req.user._id
+        });
 
-        if ( title !== undefined ) tasks.title = title;
-        if ( description !== undefined ) tasks.description = description; 
-        if ( status !== undefined ) tasks.status = status;
-        if ( duedate !== undefined ) tasks.duedate = duedate;
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                message: "Task not found or Unauthorized"
+            });
+        }
 
-        await tasks.save()
+        if (title !== undefined) task.title = title;
+        if (description !== undefined) task.description = description;
+        if (status !== undefined) task.status = status;
+        if (dueDate !== undefined) task.dueDate = dueDate;
+        if (subTasks !== undefined) task.subTasks = subTasks;
 
-        res.status(200).json({ success: true, tasks })
+        await task.save();
 
+        res.status(200).json({ success: true, task });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ success: false, message: "Failed updating tasks" })
+        res.status(500).json({ success: false, message: "Failed updating task" });
     }
-}
+};
+
 
 const getTask = async (req, res) => {
     const { id } = req.params;
@@ -73,13 +85,6 @@ const getTasks = async (req, res) => {
         const tasks = await taskModel.find({ 
             user: req.user._id
          })
-        
-         if (!tasks) {
-            return res.status(404).json({
-                success: false,
-                message: "Task not found or unauthorized"
-            })
-         }
         
          res.status(200).json({ success: true, tasks })
 

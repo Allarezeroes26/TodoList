@@ -41,10 +41,10 @@ const Register = () => {
               </p>
             </div>
             <fieldset className="fieldset w-full">
-              <legend className="fieldset-legend">Full Name</legend>
+              <legend className="fieldset-legend">Name</legend>
               <input
                 type="text"
-                placeholder="John Doe"
+                placeholder="John"
                 className="input input-bordered w-full"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
