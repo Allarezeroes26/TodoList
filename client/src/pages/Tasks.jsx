@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { taskStore } from "../stores/taskStore";
-import { Search } from "lucide-react";
+import { Delete, Search } from "lucide-react";
 
 const Tasks = () => {
-  const { tasks, createTask, getTasks } = taskStore();
+  const { tasks, createTask, getTasks, deleteTask } = taskStore();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState(""); // "" = no filter
+  const [filterStatus, setFilterStatus] = useState("");
 
   const colors = [
     "bg-primary text-primary-content",
@@ -22,12 +22,10 @@ const Tasks = () => {
     "bg-neutral text-neutral-content",
   ];
 
-  // Fetch tasks on mount
   useEffect(() => {
     getTasks();
   }, [getTasks]);
 
-  // Combine search + status filter
   const filteredTasks = tasks?.filter((task) => {
     const matchesSearch = task.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus ? task.status === filterStatus : true;
@@ -41,6 +39,11 @@ const Tasks = () => {
     setDescription("");
     setDueDate(new Date());
   };
+
+  const handleDelete = async (id) => {
+    await deleteTask(id);
+    await getTasks();
+  }
 
   return (
     <div className="min-h-screen font-paragraph p-6 space-y-6 bg-base-100">
@@ -176,9 +179,10 @@ const Tasks = () => {
                   <span className="text-xs font-medium">
                     {task.dueDate ? new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "-"}
                   </span>
-                  <button className="w-8 h-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center">
-                    →
-                  </button>
+                  <div className="flex flex-row gap-3">
+                    <button onClick={() => handleDelete(task._id)} className="size-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center"><Delete /></button>
+                    <button className="w-8 h-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center">→</button>
+                  </div>
                 </div>
               </div>
             );
