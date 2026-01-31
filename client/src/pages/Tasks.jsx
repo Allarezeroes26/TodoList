@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { taskStore } from "../stores/taskStore";
 import { Delete, Search } from "lucide-react";
+import { Link } from 'react-router-dom'
 
 const Tasks = () => {
-  const { tasks, createTask, getTasks, deleteTask } = taskStore();
+  const { tasks, createTask, getTasks, deleteTask, updateTask } = taskStore();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -45,9 +46,12 @@ const Tasks = () => {
     await getTasks();
   }
 
+  const onVisit = async (id) => {
+    await updateTask(id, { status: 'in-progress' });
+  }
+
   return (
     <div className="min-h-screen font-paragraph p-6 space-y-6 bg-base-100">
-      {/* Header & Search */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <h1 className="text-2xl font-extrabold font-display">All Tasks</h1>
         <div className="flex items-center bg-base-200 rounded-lg p-2 w-full md:w-80">
@@ -62,9 +66,7 @@ const Tasks = () => {
         </div>
       </div>
 
-      {/* Add Task & Sort */}
       <div className="flex flex-row justify-between items-center">
-        {/* Add Task Modal */}
         <label htmlFor="addtask" className="btn bg-primary">
           Add Task +
         </label>
@@ -119,7 +121,6 @@ const Tasks = () => {
           </div>
         </div>
 
-        {/* Sort Dropdown */}
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn bg-accent m-1">
             { !filterStatus ? <p>All</p> : filterStatus }
@@ -144,7 +145,6 @@ const Tasks = () => {
         </div>
       </div>
 
-      {/* Tasks Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-min">
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task, index) => {
@@ -181,7 +181,7 @@ const Tasks = () => {
                   </span>
                   <div className="flex flex-row gap-3">
                     <button onClick={() => handleDelete(task._id)} className="size-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center"><Delete /></button>
-                    <button className="w-8 h-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center">→</button>
+                    <Link to={`/task/${task._id}`}><button onClick={() => onVisit(task._id)} className="w-8 h-8 rounded-full bg-base-100/20 hover:scale-105 duration-150 transition-all flex items-center justify-center">→</button></Link>
                   </div>
                 </div>
               </div>

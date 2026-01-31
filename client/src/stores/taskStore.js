@@ -36,7 +36,7 @@ export const taskStore = create((set, get) => ({
   getTask: async (id) => {
     try {
       const res = await api.get(`/api/tasks/get-task/${id}`)
-      set({ task: res.data })
+      set({ task: res.data.task })
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to load task')
     }
@@ -46,10 +46,11 @@ export const taskStore = create((set, get) => ({
     set({ isTaskUpdating: true })
     try {
       const res = await api.put(`/api/tasks/update-task/${id}`, updatedData)
-
+      console.log("Response: ", res.data)
+      const updatedTask = res.data.task;
       set({
         tasks: get().tasks.map(task =>
-          task._id === id ? res.data : task
+          task._id === id ? updatedTask : task
         ),
       })
 

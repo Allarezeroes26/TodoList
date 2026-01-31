@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import Tasks from './pages/Tasks'
 import Settings from './pages/Settings'
 import Timer from './pages/Timer'
+import Task from './pages/Task'
 
 function App() {
   const { authUser, isCheckingAuth, checkAuth } = userAuth();
@@ -53,6 +54,10 @@ function App() {
         {
           path: '/timer',
           element: authUser ? <Timer /> : <Navigate to={'/login'} />
+        },
+        {
+          path: '/task/:id',
+          element: authUser ? <Task /> : <Navigate to={'/login'}/>
         }
       ]
     }

@@ -16,9 +16,9 @@ const HomePage = () => {
 
   const slicedTasks = tasks.slice(0, 4);
 
-  const totalTasks = tasks.reduce((sum, t) => sum + t.subTasks.length, 0);
+  const totalTasks = tasks.reduce((sum, t) => sum + tasks.length, 0);
   const completedTasks = tasks.reduce(
-    (sum, t) => sum + t.subTasks.filter(st => st.completed).length,
+    (sum, t) => sum + tasks.filter(st => st.completed).length,
     0
   );
   const progressPercent =
