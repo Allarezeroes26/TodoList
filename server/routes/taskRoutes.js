@@ -5,10 +5,10 @@ const { createTask, updateTask, getTask, getTasks, deleteTask } = require('../co
 
 router.use(authUpdate);
 
-router.post("/create-task", createTask);
-router.put("/update-task/:id", updateTask);
-router.get("/get-task/:id", getTask);
-router.get("/get-tasks", getTasks);
-router.delete("/delete-task/:id", deleteTask);
+router.post("/create-task", authUpdate, createTask);
+router.put("/update-task/:id", authUpdate, updateTask);
+router.get("/get-task/:id", authUpdate, getTask);
+router.get("/get-tasks", authUpdate, getTasks);
+router.delete("/delete-task/:id", authUpdate, deleteTask);
 
 module.exports = router;

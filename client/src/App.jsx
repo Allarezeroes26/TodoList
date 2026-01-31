@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import MainLayout from './layout/MainLayout'
-import HomePage from './pages/homePage'
+import HomePage from './pages/HomePage'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import { userAuth } from './stores/authStore'
@@ -53,7 +53,7 @@ function App() {
         },
         {
           path: '/timer',
-          element: authUser ? <Timer /> : <Navigate to={'/login'} />
+          element: <Timer />
         },
         {
           path: '/task/:id',
