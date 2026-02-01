@@ -160,7 +160,7 @@ const Timer = () => {
         <div className="card-body items-center text-center gap-1">
           <h1 className="text-2xl sm:text-3xl font-bold">Countdown Timer</h1>
           <p className="text-xs sm:text-sm opacity-70 italic">
-            {isRunning ? "Focus mode active..." : "Ready to focus?"}
+            {isRunning ? "Focus mode active..." : "Focus & Make your Time Valuable"}
           </p>
           <div className={`badge mt-2 ${mode === "work" ? "badge-primary" : "badge-success"}`}>
             {mode.toUpperCase()}
