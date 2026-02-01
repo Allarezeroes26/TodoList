@@ -27,18 +27,11 @@ https://todolist-frontend-tmm7.onrender.com
 - Real-time UI updates
 
 ### ⏱ Focus Timer
-- Work / Rest cycle (Pomodoro-style)
+- Work / Rest cycle
 - Persistent even on refresh
 - Global toast notification while running
 - Toast dismiss without stopping timer
 - Auto-cleanup on logout
-
-### 🎨 UI / UX
-- Built with **TailwindCSS + DaisyUI**
-- 30+ themes with live switching
-- Fully responsive
-- Drawer sidebar navigation
-- Toast feedback for actions
 
 ---
 
