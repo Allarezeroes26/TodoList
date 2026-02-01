@@ -148,7 +148,7 @@ const Task = () => {
                         </div>
                       </td>
                       <td className="text-center">
-                        <div className={`badge badge-sm font-black ${sub.completed ? 'badge-success' : 'badge-warning'}`}>
+                        <div className={`badge badge-sm text-sm h-[100%] font-black ${sub.completed ? 'badge-success' : 'badge-warning'}`}>
                           {sub.completed ? 'DONE' : 'TO-DO'}
                         </div>
                       </td>

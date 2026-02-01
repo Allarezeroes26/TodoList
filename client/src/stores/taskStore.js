@@ -46,7 +46,6 @@ export const taskStore = create((set, get) => ({
     set({ isTaskUpdating: true })
     try {
       const res = await api.put(`/api/tasks/update-task/${id}`, updatedData)
-      console.log("Response: ", res.data)
       const updatedTask = res.data.task;
       set({
         tasks: get().tasks.map(task =>

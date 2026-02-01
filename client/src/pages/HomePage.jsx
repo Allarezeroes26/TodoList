@@ -1,11 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { userAuth } from "../stores/authStore";
 import { taskStore } from "../stores/taskStore";
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const { authUser, isCheckingAuth, updateTask } = userAuth();
-  const { tasks, getTasks } = taskStore();
+  const { authUser, isCheckingAuth } = userAuth();
+  const { tasks, getTasks, createTask, updateTask } = taskStore();
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState(new Date());
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     if (!isCheckingAuth && authUser) {
@@ -37,6 +45,15 @@ const HomePage = () => {
     "bg-info text-info-content",
   ];
 
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    await createTask({ title, description, dueDate, status: 'pending' });
+    setTitle("");
+    setDescription("");
+    setDueDate(new Date());
+    setIsModalOpen(true)
+  };
+
   if (isCheckingAuth || !authUser) return null;
 
   return (
@@ -47,7 +64,7 @@ const HomePage = () => {
         <div className="lg:col-span-8 space-y-8">
           <header className="flex flex-col gap-2">
             <h1 className="text-4xl font-black font-display tracking-tight">
-              Hi, {authUser?.name.split(' ')[0]} 👋
+              Hi, {authUser?.name?.split(" ")[0] || "there"} 👋
             </h1>
             <p className="text-xl opacity-60">
               {progressPercent === 100 ? "All caught up! Time to relax? ☕" : "Let's crush those goals today."}
@@ -81,10 +98,60 @@ const HomePage = () => {
             </div>
 
             {tasks.length === 0 ? (
-              <div className="text-center py-12 bg-base-200 rounded-3xl border-2 border-dashed border-base-300">
-                <p className="opacity-50">No tasks found. Ready to start something new?</p>
-                <Link to="/create-task" className="btn btn-primary btn-sm mt-4">Create Task</Link>
-              </div>
+              <>
+                <div className="text-center py-12 bg-base-200 rounded-3xl border-2 border-dashed border-base-300">
+                  <p className="opacity-50">No tasks found. Ready to start something new?</p>
+                  <label htmlFor="addtask" className="btn btn-primary rounded-xl shadow-lg shadow-primary/20">
+                    Add Task +
+                  </label>
+                </div>
+
+                <input type="checkbox" id="addtask" onChange={(e) => setIsModalOpen(e.target.checked)} className="modal-toggle" />
+                <div className="modal" role="dialog">
+                  <div className="modal-box rounded-[2rem]">
+                    <h1 className="font-display text-2xl font-black mb-5">New Task</h1>
+                    <form onSubmit={handleAdd}>
+                      <fieldset className="fieldset">
+                        <legend className="fieldset-legend font-bold">Task Title</legend>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          placeholder="What needs to be done?"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          required
+                        />
+                      </fieldset>
+
+                      <fieldset className="fieldset mt-4">
+                        <legend className="fieldset-legend font-bold">Details</legend>
+                        <textarea
+                          className="textarea textarea-bordered h-24 w-full"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          placeholder="Add some notes..."
+                        ></textarea>
+                      </fieldset>
+
+                      <fieldset className="fieldset mt-4">
+                        <legend className="fieldset-legend font-bold">Deadline</legend>
+                        <input
+                          type="datetime-local"
+                          className="input input-bordered w-full"
+                          value={dueDate ? dueDate.toISOString().slice(0, 16) : ""}
+                          onChange={(e) => setDueDate(new Date(e.target.value))}
+                          required
+                        />
+                      </fieldset>
+
+                      <div className="modal-action">
+                        <button type="submit" className="btn btn-primary px-8 rounded-xl">Create</button>
+                        <label htmlFor="addtask" className="btn btn-ghost">Cancel</label>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topTasks.map((task, index) => (

@@ -53,7 +53,7 @@ function App() {
         },
         {
           path: '/timer',
-          element: <Timer />
+          element: authUser ? <Timer /> : <Navigate to='/login'/>
         },
         {
           path: '/task/:id',
