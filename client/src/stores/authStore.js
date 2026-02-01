@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import api from '../api/api';
 import { toast } from 'react-hot-toast'
+import { taskStore } from './taskStore';
+
 
 
 export const userAuth = create((set) => ({
@@ -52,11 +54,12 @@ export const userAuth = create((set) => ({
     logout: async () => {
         try {
             await api.post('/api/auth/logout');
-            set({ authUser: null })
-            toast.success('Logout Success!')
+            set({ authUser: null });
+            taskStore.getState().clearTasks();
+            toast.success('Logout Success!');
         } catch (err) {
-            const message = err.response?.data?.message || err.message || "Something went wrong"
-            toast.error(message)
+            const message = err.response?.data?.message || err.message || "Something went wrong";
+            toast.error(message);
         }
     }
 }))

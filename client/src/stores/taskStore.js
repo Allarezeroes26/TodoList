@@ -74,4 +74,6 @@ export const taskStore = create((set, get) => ({
       toast.error(err.response?.data?.message || 'Delete failed')
     }
   },
+
+  clearTasks: () => set({ tasks: [], task: null })
 }))
