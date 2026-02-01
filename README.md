@@ -136,6 +136,6 @@ Logout clears sensitive client state
 
 ---
 
-# Author
+# 👋 Author
 
 Made by Erwin
