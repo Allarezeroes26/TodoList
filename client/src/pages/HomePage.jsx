@@ -10,8 +10,6 @@ const HomePage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -23,7 +21,10 @@ const HomePage = () => {
 
   const topTasks = tasks
     .filter(t => t.status !== 'completed')
-    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+    .sort(
+      (a, b) =>
+        new Date(a.dueDate || Infinity) - new Date(b.dueDate || Infinity)
+    )
     .slice(0, 4);
 
   const totalTasks = tasks.length;
@@ -47,11 +48,15 @@ const HomePage = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    await createTask({ title, description, dueDate, status: 'pending' });
+    try {
+      await createTask({ title, description, dueDate, status: 'pending' });
+    } catch (err) {
+      console.log(err)
+    }
     setTitle("");
     setDescription("");
     setDueDate(new Date());
-    setIsModalOpen(true)
+    setIsModalOpen(false)
   };
 
   if (isCheckingAuth || !authUser) return null;
@@ -163,8 +168,8 @@ const HomePage = () => {
                         <h3 className="text-xl font-bold mt-3 leading-tight group-hover:underline">{task.title}</h3>
                         
                         <div className="mt-4 space-y-1">
-                          {task.subTasks?.slice(0, 2).map((st, i) => (
-                            <div key={i} className="flex items-center gap-2 text-sm opacity-80">
+                          {task.subTasks?.slice(0, 2).map((st) => (
+                            <div key={st._id} className="flex items-center gap-2 text-sm opacity-80">
                               <div className={`w-2 h-2 rounded-full ${st.completed ? 'bg-success' : 'bg-base-100/50'}`} />
                               <span className={st.completed ? "line-through" : ""}>{st.title}</span>
                             </div>

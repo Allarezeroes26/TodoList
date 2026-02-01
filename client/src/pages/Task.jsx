@@ -10,6 +10,8 @@ const Task = () => {
   const { id } = useParams()
   const { task, getTask, updateTask } = taskStore()
 
+  const [isSubTaskModalOpen, setIsSubTaskModalOpen] = useState(false);
+
   useEffect(() => {
     getTask(id)
   }, [id, getTask])
@@ -24,7 +26,7 @@ const Task = () => {
   const completedSubtasks = task.subTasks?.filter(s => s.completed).length || 0;
   const subtaskPercentage = totalSubtasks === 0 ? 0 : Math.round((completedSubtasks / totalSubtasks) * 100);
   
-  const isOverdue = new Date(task.dueDate) < new Date() && task.status !== 'completed';
+  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed';
 
   const handleDeleteSubTask = async (subIndex) => {
     const newSubTasks = task.subTasks.filter((_, i) => i !== subIndex);
@@ -116,9 +118,13 @@ const Task = () => {
             <h1 className="text-xl font-black font-display uppercase tracking-widest flex items-center gap-2">
               <Check size={20} className="text-success"/> Sub-Tasks
             </h1>
-            <label htmlFor="add-subtask-modal" className="btn btn-sm btn-primary rounded-xl gap-2 shadow-lg shadow-primary/20">
+            <button
+              onClick={() => setIsSubTaskModalOpen(true)}
+              className="btn btn-sm btn-primary rounded-xl gap-2 shadow-lg shadow-primary/20"
+            >
               <Plus className="w-4 h-4" /> New Step
-            </label>
+            </button>
+
           </div>
 
           <div className="bg-base-100 rounded-[2rem] border border-base-300 overflow-hidden shadow-xl">
@@ -133,7 +139,7 @@ const Task = () => {
               <tbody className="divide-y divide-base-300">
                 {task.subTasks?.length > 0 ? (
                   task.subTasks.map((sub, i) => (
-                    <tr key={i} className="hover:bg-base-200/50 transition-colors border-none group">
+                    <tr key={sub._id || i} className="hover:bg-base-200/50 transition-colors border-none group">
                       <td className="pl-8 py-4">
                         <div className="flex items-center gap-3">
                           <input 
@@ -180,13 +186,24 @@ const Task = () => {
         </div>
       </div>
 
-      <input type="checkbox" id="add-subtask-modal" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box max-w-xl relative rounded-[2.5rem]">
-          <label htmlFor="add-subtask-modal" className="btn btn-sm btn-circle absolute right-4 top-4">✕</label>
-          <SubTaskForm taskId={task._id} onAdded={() => (document.getElementById('add-subtask-modal').checked = false)} />
+      {isSubTaskModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-xl relative rounded-[2.5rem]">
+            
+            <button
+              onClick={() => setIsSubTaskModalOpen(false)}
+              className="btn btn-sm btn-circle absolute right-4 top-4"
+            >
+              ✕
+            </button>
+
+            <SubTaskForm
+              taskId={task._id}
+              onAdded={() => setIsSubTaskModalOpen(false)}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -11,6 +11,7 @@ const Tasks = () => {
   const [dueDate, setDueDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  const [ isModalOpen, setIsModalOpen ] = useState(false)
 
   const colors = [
     "bg-primary text-primary-content",
@@ -42,11 +43,15 @@ const Tasks = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    await createTask({ title, description, dueDate, status: 'pending' });
+    try {
+      await createTask({ title, description, dueDate, status: 'pending' });
+    } catch (err) {
+      console.log(err)
+    }
     setTitle("");
     setDescription("");
     setDueDate(new Date());
-    document.getElementById('addtask').checked = false;
+    setIsModalOpen(false)
   };
 
   const handleDelete = async (id) => {
@@ -120,7 +125,7 @@ const Tasks = () => {
           )}
         </div>
 
-        <input type="checkbox" id="addtask" className="modal-toggle" />
+        <input type="checkbox" onChange={(e) => setIsModalOpen(e.target.checked)} id="addtask" className="modal-toggle" />
         <div className="modal" role="dialog">
           <div className="modal-box rounded-[2rem]">
             <h1 className="font-display text-2xl font-black mb-5">New Task</h1>
@@ -184,11 +189,11 @@ const Tasks = () => {
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task, index) => {
             const colorClass = colors[index % colors.length];
-            const isOverdue = new Date(task.dueDate) < new Date() && task.status !== 'completed';
+            const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== "completed";
 
             return (
               <div
-                key={task._id || index}
+                key={task._id}
                 className={`p-6 rounded-[2rem] flex flex-col justify-between transition-all hover:scale-[1.03] hover:shadow-2xl relative overflow-hidden group ${task.status === 'completed' ? 'bg-neutral opacity-80' : colorClass}`}
               >
                 {isOverdue && (
