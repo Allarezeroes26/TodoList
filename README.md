@@ -115,8 +115,9 @@ npm run dev
 ```
 
 ## 🏗 Production Build
+```
 npm run build
-
+```
 Deploy the dist/ folder as the publish directory.
 
 ---
