@@ -1,6 +1,6 @@
 # 📝 Full-Stack Todo & Focus Timer App
 
-A modern **full-stack productivity app** built with **React, Zustand, Node.js, Express, and MongoDB**.  
+A **full-stack productivity app** built with **React, Zustand, Node.js, Express, and MongoDB**.  
 Includes authentication, task management, subtasks, theme switching, and a persistent focus timer with global toast notifications.
 
 ---
